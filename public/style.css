@@ -1,0 +1,240 @@
+/* Reset and Base Styles */
+body {
+    margin: 0;
+    
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Layout Containers */
+#site {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+#midsection {
+    width: 80rem;
+    margin-left: 3rem;
+    flex: 2;
+    background-color: white;
+    padding: 10px;
+    height: 100vh;
+}
+
+#rightsection {
+    width: 5rem;
+    flex: 0.5;
+    background-color: grey;
+    padding: 10px;
+    height: 100vh;
+}
+
+/* Left Section Styles */
+#leftsection {
+    text-align: center;
+    align-items: center;
+    border-radius: 20px;
+    position: inherit;
+    padding: 2rem;
+    margin-left: 1rem;
+    background-color: #212121;
+    color: white;
+    width: 17rem;
+}
+
+#logo {
+    font-size: 5rem;
+    margin: 0;
+}
+
+#namecolor {
+    color: lightskyblue;
+}
+
+/* Navigation Styles */
+#tabs {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    color: white;
+}
+
+#tabs > li {
+    margin-top: 25px;
+}
+
+#tabs > li > a {
+    text-decoration: none;
+    color: white;
+}
+
+#tabs > li:hover {
+    cursor: pointer;
+}
+
+/* Button Styles */
+.buttons {
+    color: white;
+    background-color: #212121;
+    border: none;
+    font-size: 1.5rem;
+    min-width: 5rem;
+    box-sizing: border-box;
+    height: 4rem;
+    border-radius: 50px;
+}
+
+.tabsButton {
+    background: none;
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    width: 12rem;
+    height: 8vh;
+    border-radius: 50px;
+}
+
+.tabsButton:hover {
+    background-color: white;
+    color: #212121;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.active {
+    background-color: white !important;
+    color: #212121 !important;
+}
+
+/* Table Styles */
+.table_component {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.table_component table {
+    border: 1px solid #dededf;
+    min-width: 100%;
+    width: auto;
+    table-layout: auto;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    text-align: left;
+}
+
+.table_component caption {
+    caption-side: top;
+    text-align: left;
+}
+
+.table_component th {
+    border: 1px solid #dededf;
+    background-color: #eceff1;
+    color: #000000;
+    padding: 5px;
+}
+
+.table_component td {
+    border: 1px solid #dededf;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 1rem;
+}
+
+/* Update Table Button Styles */
+.table_component button {
+    padding: 0.3rem 0.8rem;
+    margin: 0.1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    min-width: auto;
+    height: auto;
+}
+
+/* Style for Edit button */
+.table_component button:first-child {
+    background-color: lightskyblue;
+    color: white;
+}
+
+/* Style for Delete button */
+.table_component button:last-child {
+    background-color: #212121;
+    color: white;
+}
+
+/* Add New Product button specific style */
+#productsTable .buttons {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    height: auto;
+    min-width: auto;
+}
+
+.table_component button:hover {
+    opacity: 0.8;
+}
+
+/* Toggle Menu */
+#toggleMenu {
+    position: absolute;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+[contenteditable="true"]:focus {
+    outline: 2px solid #212121;
+    padding: 0.2rem;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .table_component td,
+    .table_component th {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .table_component table {
+        width: 100%;
+    }
+    
+    .table_component thead {
+        display: none;
+    }
+    
+    .table_component tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dededf;
+    }
+    
+    .table_component td {
+        display: block;
+        text-align: right;
+        padding: 0.5rem;
+        position: relative;
+        border-bottom: 1px solid #dededf;
+    }
+    
+    .table_component td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+}
