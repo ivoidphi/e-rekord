@@ -1,13 +1,5 @@
-// Update API configuration with fallback and error handling
-const API_URL = (() => {
-    const hostname = window.location.hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return window.location.port === '5500' ? 
-            'http://localhost:3000/api' : 
-            '/api';
-    }
-    return 'https://e-rekord.onrender.com/api';
-})();
+// Update API configuration
+const API_URL = 'http://localhost:3000/api';
 
 // Table visibility functions
 function showproducts() {
@@ -99,11 +91,9 @@ async function saveRow(button) {
         const response = await fetch(`${API_URL}/products`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
             mode: 'cors',
-            credentials: 'include',
             body: JSON.stringify(rowData)
         });
 
@@ -129,8 +119,7 @@ async function deleteRow(button) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            mode: 'cors',
-            credentials: 'include'
+            mode: 'cors'
         });
 
         if (!response.ok) throw new Error('Failed to delete product');
@@ -324,8 +313,7 @@ async function deleteRow(button) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            mode: 'cors',
-            credentials: 'include'
+            mode: 'cors'
         });
 
         if (!response.ok) throw new Error('Failed to delete product');
@@ -378,11 +366,9 @@ async function loadData() {
         const response = await fetch(`${API_URL}/data`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
-            mode: 'cors',
-            credentials: 'include'
+            mode: 'cors'
         });
 
         if (!response.ok) {
