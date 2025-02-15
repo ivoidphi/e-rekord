@@ -329,12 +329,30 @@ async function loadAllTables() {
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         
-        populateTable('productTableBody', data.products, ['product', 'id', 'quantity', 'cost', 'totalInventory']);
-        populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
-        populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
-        populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+        console.log('Received data:', data); // Debug log
+        
+        // Clear all tables first
+        document.getElementById('productTableBody').innerHTML = '';
+        document.getElementById('logsTableBody').innerHTML = '';
+        document.getElementById('accountsTableBody').innerHTML = '';
+        document.getElementById('dataTableBody').innerHTML = '';
+        
+        // Populate each table
+        if (data.products && Array.isArray(data.products)) {
+            populateTable('productTableBody', data.products, ['product', 'id', 'quantity', 'cost', 'totalInventory']);
+        }
+        if (data.logs && Array.isArray(data.logs)) {
+            populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
+        }
+        if (data.accounts && Array.isArray(data.accounts)) {
+            populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
+        }
+        if (data.dataAnalysis && Array.isArray(data.dataAnalysis)) {
+            populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+        }
     } catch (error) {
         console.error('Error refreshing tables:', error);
+        alert('Error loading data. Please check console for details.');
     }
 }
 
@@ -410,6 +428,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 });
 
+// Update populateTable function to handle missing data better
 function populateTable(tableBodyId, data, columns) {
     const tableBody = document.getElementById(tableBodyId);
     if (!tableBody) return;
@@ -417,11 +436,16 @@ function populateTable(tableBodyId, data, columns) {
     tableBody.innerHTML = '';
     
     try {
+        if (!data || !Array.isArray(data)) {
+            console.warn(`No data available for ${tableBodyId}`);
+            return;
+        }
+
         data.forEach(row => {
             const tr = document.createElement('tr');
             columns.forEach(col => {
                 const td = document.createElement('td');
-                td.textContent = row[col] || '';
+                td.textContent = row[col] !== undefined ? row[col] : '';
                 tr.appendChild(td);
             });
             
@@ -437,7 +461,7 @@ function populateTable(tableBodyId, data, columns) {
             tableBody.appendChild(tr);
         });
     } catch (error) {
-        console.error('Error populating table:', error);
+        console.error(`Error populating table ${tableBodyId}:`, error);
         tableBody.innerHTML = '<tr><td colspan="6">Error loading data</td></tr>';
     }
 }

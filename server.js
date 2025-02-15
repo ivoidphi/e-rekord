@@ -53,13 +53,31 @@ app.get('/api/data', async (req, res) => {
         const logs = await Log.find();
         const analysis = await Analysis.find();
         
+        // Format the data to match the expected structure
+        const formattedProducts = products.map(p => ({
+            product: p.product,
+            id: p.id,
+            quantity: p.quantity,
+            cost: p.cost,
+            totalInventory: p.totalInventory
+        }));
+
+        const formattedAnalysis = analysis.map(a => ({
+            product: a.product,
+            totalSales: a.totalSales,
+            revenue: a.revenue,
+            growthRate: a.growthRate || '0%',
+            lastUpdated: a.lastUpdated
+        }));
+
         res.json({
-            products,
-            logs,
-            dataAnalysis: analysis,
-            accounts: [] // Placeholder for future implementation
+            products: formattedProducts,
+            logs: logs,
+            dataAnalysis: formattedAnalysis,
+            accounts: []
         });
     } catch (err) {
+        console.error('Server Error:', err);
         res.status(500).json({ error: err.message });
     }
 });
