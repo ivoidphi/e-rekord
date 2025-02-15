@@ -1,7 +1,7 @@
 // Replace near the top of the file
 const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000/api'
-    : 'https://e-rekord.onrender.com/api';  // Replace with your actual Render URL after deployment
+    ? 'http://localhost:3000'
+    : 'https://e-rekord.onrender.com';
 
 // Table visibility functions
 function showproducts() {
@@ -139,7 +139,7 @@ async function saveRow(button) {
     rowData.totalInventory = rowData.quantity * rowData.cost;
 
     try {
-        const response = await fetch(`${API_URL}/data`);
+        const response = await fetch(`${API_URL}/data.json`);
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         
@@ -169,7 +169,7 @@ async function saveRow(button) {
         });
 
         // Save to server
-        const saveResponse = await fetch(`${API_URL}/data`, {
+        const saveResponse = await fetch(`${API_URL}/data.json`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -206,7 +206,7 @@ async function deleteRow(button) {
     const productId = row.cells[1].textContent;
     
     try {
-        const response = await fetch(`${API_URL}/data`);
+        const response = await fetch(`${API_URL}/data.json`);
         const data = await response.json();
         
         // Remove from products
@@ -225,7 +225,7 @@ async function deleteRow(button) {
         data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== row.cells[0].textContent);
 
         // Save updated data
-        const saveResponse = await fetch(`${API_URL}/data`, {
+        const saveResponse = await fetch(`${API_URL}/data.json`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -432,7 +432,7 @@ async function deleteRow(button) {
     const productId = row.cells[1].textContent;
     
     try {
-        const response = await fetch(`${API_URL}/data`);
+        const response = await fetch(`${API_URL}/data.json`);
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         
@@ -453,7 +453,7 @@ async function deleteRow(button) {
         data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== productName);
 
         // Save changes
-        const saveResponse = await fetch(`${API_URL}/data`, {
+        const saveResponse = await fetch(`${API_URL}/data.json`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -507,32 +507,44 @@ function cancelEdit(button) {
 // Update the fetch URL to use the correct path
 async function loadData() {
     try {
-        // First try to load from data.json
-        const response = await fetch('./data.json');
+        // Try loading from API first
+        const response = await fetch(`${API_URL}/data.json`);
         if (!response.ok) {
-            throw new Error('Could not load data.json');
+            throw new Error('API data not available');
         }
         const data = await response.json();
         return data;
-    } catch (error) {
-        console.log('Loading backup data:', error);
-        // Load from backup.json if data.json fails
+    } catch (apiError) {
+        console.log('API error, trying local data:', apiError);
         try {
-            const backupResponse = await fetch('./backup.json');
-            if (!backupResponse.ok) {
-                throw new Error('Could not load backup data');
+            // Try loading local data.json
+            const localResponse = await fetch('/data.json');
+            if (!localResponse.ok) {
+                throw new Error('Local data not available');
             }
-            const backupData = await backupResponse.json();
-            console.log('Loaded backup data successfully');
-            return backupData;
-        } catch (backupError) {
-            console.error('Could not load backup data:', backupError);
-            return {
-                products: [],
-                logs: [],
-                dataAnalysis: [],
-                accounts: []
-            };
+            const localData = await localResponse.json();
+            return localData;
+        } catch (localError) {
+            console.log('Local data error, using backup:', localError);
+            try {
+                // Finally, try backup data
+                const backupResponse = await fetch('/backup.json');
+                if (!backupResponse.ok) {
+                    throw new Error('Backup data not available');
+                }
+                const backupData = await backupResponse.json();
+                console.log('Using backup data');
+                return backupData;
+            } catch (backupError) {
+                console.error('All data sources failed:', backupError);
+                // Return empty data structure as last resort
+                return {
+                    products: [],
+                    logs: [],
+                    dataAnalysis: [],
+                    accounts: []
+                };
+            }
         }
     }
 }
