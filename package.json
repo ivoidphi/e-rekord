@@ -1,17 +1,21 @@
 {
   "name": "e-rekord",
   "version": "1.0.0",
-  "description": "Product management system",
-  "main": "server.js",
+  "description": "E-Rekord Inventory System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^8.2.0"
+    "mongoose": "^6.9.0"
   },
-  "scripts": {
-    "start": "node server.js",
-    "build": "echo 'No build step required'"
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   },
   "engines": {
     "node": ">=14.0.0"

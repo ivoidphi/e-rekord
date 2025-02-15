@@ -1,35 +1,44 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const apiRoutes = require('./routes/api');
 
 const app = express();
 
-// Update CORS configuration
+// CORS configuration
 app.use(cors({
-    origin: [
-        'http://localhost:5500',
-        'http://127.0.0.1:5500',
-        'https://e-rekord.onrender.com'
-    ],
+    origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'https://e-rekord.onrender.com'],
+    credentials: true,
     methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '../public')));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/e-rekord')
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// MongoDB connection with retry logic
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        console.log('MongoDB connected successfully');
+    } catch (error) {
+        console.error('MongoDB connection error:', error);
+        // Retry connection after 5 seconds
+        setTimeout(connectDB, 5000);
+    }
+};
+
+connectDB();
 
 // Routes
 app.use('/api', apiRoutes);
 
-// Static files
-app.use(express.static('public'));
-
-// Add error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
     console.error('Server Error:', err);
     res.status(500).json({ 

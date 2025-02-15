@@ -1,8 +1,10 @@
-// Update API configuration with proper error handling
+// Update API configuration with fallback and error handling
 const API_URL = (() => {
     const hostname = window.location.hostname;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:3000/api';
+        return window.location.port === '5500' ? 
+            'http://localhost:3000/api' : 
+            '/api';
     }
     return 'https://e-rekord.onrender.com/api';
 })();
@@ -392,19 +394,7 @@ async function loadData() {
         return data;
     } catch (error) {
         console.error('Error loading data:', error);
-        // Try loading backup data if API fails
-        try {
-            const backupResponse = await fetch('/backup.json');
-            if (backupResponse.ok) {
-                const backupData = await backupResponse.json();
-                console.log('Using backup data');
-                return backupData;
-            }
-        } catch (backupError) {
-            console.error('Backup data loading failed:', backupError);
-        }
-        
-        // Return empty structure as last resort
+        // Return empty structure if all attempts fail
         return {
             products: [],
             logs: [],
