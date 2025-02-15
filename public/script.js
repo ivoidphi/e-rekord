@@ -1,24 +1,3 @@
-// Sample data arrays
-const products = [
-    { name: 'Product 1', id: '001', quantity: 100, cost: 50, total: 5000 },
-    { name: 'Product 2', id: '002', quantity: 150, cost: 75, total: 11250 }
-];
-
-const logs = [
-    { name: 'John Doe', type: 'Admin', action: 'Added Product', date: '2023-12-01', time: '10:30 AM' },
-    { name: 'Jane Smith', type: 'User', action: 'Updated Stock', date: '2023-12-01', time: '11:45 AM' }
-];
-
-const accounts = [
-    { name: 'John Doe', role: 'Admin', status: 'Active', date: '2023-12-01', time: '09:00 AM' },
-    { name: 'Jane Smith', role: 'User', status: 'Active', date: '2023-12-01', time: '09:15 AM' }
-];
-
-const analysisData = [
-    { product: 'Product 1', sales: 500, revenue: 25000, growth: '15%', lastUpdated: '2023-12-01' },
-    { product: 'Product 2', sales: 750, revenue: 56250, growth: '20%', lastUpdated: '2023-12-01' }
-];
-
 // Replace near the top of the file
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:3000/api'
@@ -393,39 +372,18 @@ window.addEventListener('load', function() {
 });
 
 // Replace the DOMContentLoaded event listener with this updated version
-document.addEventListener("DOMContentLoaded", function() {
-    // First try to load from data.json
-    fetch('data.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Could not load data.json');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!data) throw new Error('Data is empty');
-            
-            // Use the sample data if any section is missing in the JSON
-            const tableData = {
-                products: data.products || products,
-                logs: data.logs || logs,
-                accounts: data.accounts || accounts,
-                dataAnalysis: data.dataAnalysis || analysisData
-            };
-            
-            populateTable('productTableBody', tableData.products, ['product', 'id', 'quantity', 'cost', 'totalInventory']);
-            populateTable('logsTableBody', tableData.logs, ['name', 'type', 'action', 'date', 'time']);
-            populateTable('accountsTableBody', tableData.accounts, ['name', 'role', 'status', 'date', 'time']);
-            populateTable('dataTableBody', tableData.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
-        })
-        .catch(error => {
-            console.warn('Falling back to sample data:', error);
-            // Fallback to sample data if JSON loading fails
-            populateTable('productTableBody', products, ['name', 'id', 'quantity', 'cost', 'total']);
-            populateTable('logsTableBody', logs, ['name', 'type', 'action', 'date', 'time']);
-            populateTable('accountsTableBody', accounts, ['name', 'role', 'status', 'date', 'time']);
-            populateTable('dataTableBody', analysisData, ['product', 'sales', 'revenue', 'growth', 'lastUpdated']);
-        });
+document.addEventListener("DOMContentLoaded", async function() {
+    try {
+        const data = await loadData();
+        
+        // Populate tables with loaded data
+        populateTable('productTableBody', data.products, ['name', 'id', 'quantity', 'cost', 'total']);
+        populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
+        populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
+        populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
 });
 
 // Update populateTable function to handle missing data better
@@ -545,3 +503,51 @@ function cancelEdit(button) {
         row.innerHTML = row.dataset.originalContent;
     }
 }
+
+// Update the fetch URL to use the correct path
+async function loadData() {
+    try {
+        // First try to load from data.json
+        const response = await fetch('./data.json');
+        if (!response.ok) {
+            throw new Error('Could not load data.json');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.log('Loading backup data:', error);
+        // Load from backup.json if data.json fails
+        try {
+            const backupResponse = await fetch('./backup.json');
+            if (!backupResponse.ok) {
+                throw new Error('Could not load backup data');
+            }
+            const backupData = await backupResponse.json();
+            console.log('Loaded backup data successfully');
+            return backupData;
+        } catch (backupError) {
+            console.error('Could not load backup data:', backupError);
+            return {
+                products: [],
+                logs: [],
+                dataAnalysis: [],
+                accounts: []
+            };
+        }
+    }
+}
+
+// Update the DOMContentLoaded event listener
+document.addEventListener("DOMContentLoaded", async function() {
+    try {
+        const data = await loadData();
+        
+        // Populate tables with loaded data
+        populateTable('productTableBody', data.products, ['name', 'id', 'quantity', 'cost', 'total']);
+        populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
+        populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
+        populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+    } catch (error) {
+        console.error('Error loading data:', error);
+    }
+});

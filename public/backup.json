@@ -1,0 +1,38 @@
+{
+  "products": [
+    {
+      "name": "Backup Product 1",
+      "id": "BKP001",
+      "quantity": 100,
+      "cost": 500,
+      "total": 50000
+    }
+  ],
+  "logs": [
+    {
+      "name": "System",
+      "type": "Backup",
+      "action": "System Restore Point Created",
+      "date": "2024-01-20",
+      "time": "00:00 AM"
+    }
+  ],
+  "dataAnalysis": [
+    {
+      "product": "Backup Product 1",
+      "totalSales": 0,
+      "revenue": 0,
+      "growthRate": "0%",
+      "lastUpdated": "2024-01-20"
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Admin",
+      "role": "System",
+      "status": "Active",
+      "date": "2024-01-20",
+      "time": "00:00 AM"
+    }
+  ]
+}
