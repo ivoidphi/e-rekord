@@ -1,7 +1,7 @@
-// Replace near the top of the file
+// Update API configuration
 const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000'
-    : 'https://e-rekord.onrender.com';
+    ? 'http://localhost:3000/api'
+    : 'https://e-rekord.onrender.com/api';
 
 // Table visibility functions
 function showproducts() {
@@ -51,60 +51,13 @@ function toggleMenu() {
     leftSection.style.display = leftSection.style.display === 'none' ? 'block' : 'none';
 }
 
-// Populate tables when page loads
-window.onload = function() {
-    // Populate Products table
-    const productTableBody = document.getElementById('productTableBody');
-    products.forEach(product => {
-        const row = `<tr>
-            <td>${product.name}</td>
-            <td>${product.id}</td>
-            <td>${product.quantity}</td>
-            <td>${product.cost}</td>
-            <td>${product.total}</td>
-            <td><button class="buttons">Edit</button> <button class="buttons">Delete</button></td>
-        </tr>`;
-        productTableBody.innerHTML += row;
-    });
-
-    // Populate Logs table
-    const logsTableBody = document.getElementById('logsTableBody');
-    logs.forEach(log => {
-        const row = `<tr>
-            <td>${log.name}</td>
-            <td>${log.type}</td>
-            <td>${log.action}</td>
-            <td>${log.date}</td>
-            <td>${log.time}</td>
-        </tr>`;
-        logsTableBody.innerHTML += row;
-    });
-
-    // Populate Accounts table
-    const accountsTableBody = document.getElementById('accountsTableBody');
-    accounts.forEach(account => {
-        const row = `<tr>
-            <td>${account.name}</td>
-            <td>${account.role}</td>
-            <td>${account.status}</td>
-            <td>${account.date}</td>
-            <td>${account.time}</td>
-        </tr>`;
-        accountsTableBody.innerHTML += row;
-    });
-
-    // Populate Data Analysis table
-    const dataTableBody = document.getElementById('dataTableBody');
-    analysisData.forEach(data => {
-        const row = `<tr>
-            <td>${data.product}</td>
-            <td>${data.sales}</td>
-            <td>${data.revenue}</td>
-            <td>${data.growth}</td>
-            <td>${data.lastUpdated}</td>
-        </tr>`;
-        dataTableBody.innerHTML += row;
-    });
+// Remove the sample data arrays and replace window.onload
+window.onload = async function() {
+    try {
+        await loadAllTables();
+    } catch (error) {
+        console.error('Error initializing tables:', error);
+    }
 }
 
 function addNewRow() {
@@ -123,7 +76,7 @@ function addNewRow() {
     productTableBody.innerHTML += newRow;
 }
 
-// Replace the saveRow function
+// Update saveRow function
 async function saveRow(button) {
     const row = button.closest('tr');
     const originalId = row.dataset.originalId || row.cells[1].textContent; // Store original ID for updating
@@ -139,63 +92,20 @@ async function saveRow(button) {
     rowData.totalInventory = rowData.quantity * rowData.cost;
 
     try {
-        const response = await fetch(`${API_URL}/data.json`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const data = await response.json();
-        
-        // Remove existing product with the same ID
-        data.products = data.products.filter(p => p.id !== originalId);
-        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== rowData.product);
-        
-        // Add the updated product
-        data.products.push(rowData);
-
-        // Add log entry
-        data.logs.push({
-            name: 'User',
-            type: 'System',
-            action: `Product ${rowData.id} ${originalId ? 'updated' : 'added'}`,
-            date: new Date().toISOString().split('T')[0],
-            time: new Date().toLocaleTimeString()
-        });
-
-        // Add new analysis entry
-        data.dataAnalysis.push({
-            product: rowData.product,
-            totalSales: rowData.quantity,
-            revenue: rowData.totalInventory,
-            growthRate: "0%",
-            lastUpdated: new Date().toISOString().split('T')[0]
-        });
-
-        // Save to server
-        const saveResponse = await fetch(`${API_URL}/data.json`, {
+        const response = await fetch(`${API_URL}/products`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(rowData)
         });
 
-        if (!saveResponse.ok) throw new Error('Failed to save data');
-
-        // Update row display
-        row.innerHTML = `
-            <td>${rowData.product}</td>
-            <td>${rowData.id}</td>
-            <td>${rowData.quantity}</td>
-            <td>${rowData.cost}</td>
-            <td>${rowData.totalInventory}</td>
-            <td>
-                <button class="buttons" onclick="editRow(this)">Edit</button>
-                <button class="buttons" onclick="deleteRow(this)">Delete</button>
-            </td>
-        `;
-
-        // Refresh all tables
+        if (!response.ok) throw new Error('Failed to save product');
+        
+        // Refresh all tables after successful save
         await loadAllTables();
         
     } catch (error) {
         console.error('Error saving data:', error);
-        alert('Error saving data');
+        alert('Error saving data: ' + error.message);
     }
 }
 
@@ -206,43 +116,20 @@ async function deleteRow(button) {
     const productId = row.cells[1].textContent;
     
     try {
-        const response = await fetch(`${API_URL}/data.json`);
-        const data = await response.json();
-        
-        // Remove from products
-        data.products = data.products.filter(p => p.id !== productId);
-        
-        // Add to logs
-        data.logs.push({
-            name: 'User',
-            type: 'System',
-            action: `Product ${productId} deleted`,
-            date: new Date().toISOString().split('T')[0],
-            time: new Date().toLocaleTimeString()
+        const response = await fetch(`${API_URL}/products/${productId}`, {
+            method: 'DELETE'
         });
 
-        // Remove from analysis
-        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== row.cells[0].textContent);
-
-        // Save updated data
-        const saveResponse = await fetch(`${API_URL}/data.json`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-
-        if (!saveResponse.ok) throw new Error('Failed to save data');
+        if (!response.ok) throw new Error('Failed to delete product');
         
-        // Remove row from table
+        // Remove row and refresh tables
         row.remove();
-        
-        // Reload all tables to ensure consistency
         await loadAllTables();
         
-        alert('Deleted successfully!');
+        console.log('Product deleted successfully');
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error deleting product');
+        console.error('Error deleting product:', error);
+        alert('Error deleting product: ' + error.message);
     }
 }
 
@@ -304,39 +191,26 @@ function updateDataAnalysis() {
 // Add this new helper function
 async function loadAllTables() {
     try {
-        const response = await fetch(`${API_URL}/data`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const data = await response.json();
+        const data = await loadData();
         
-        console.log('Received data:', data); // Debug log
-        
-        // Clear all tables first
+        // Clear and populate tables
         document.getElementById('productTableBody').innerHTML = '';
         document.getElementById('logsTableBody').innerHTML = '';
         document.getElementById('accountsTableBody').innerHTML = '';
         document.getElementById('dataTableBody').innerHTML = '';
         
-        // Populate each table
-        if (data.products && Array.isArray(data.products)) {
-            populateTable('productTableBody', data.products, ['product', 'id', 'quantity', 'cost', 'totalInventory']);
-        }
-        if (data.logs && Array.isArray(data.logs)) {
-            populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
-        }
-        if (data.accounts && Array.isArray(data.accounts)) {
-            populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
-        }
-        if (data.dataAnalysis && Array.isArray(data.dataAnalysis)) {
-            populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
-        }
+        if (data.products) populateTable('productTableBody', data.products, ['name', 'id', 'quantity', 'cost', 'totalInventory']);
+        if (data.logs) populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
+        if (data.accounts) populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
+        if (data.dataAnalysis) populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+        
     } catch (error) {
         console.error('Error refreshing tables:', error);
         alert('Error loading data. Please check console for details.');
     }
 }
 
-// Replace the existing load event listeners with this single one
-window.addEventListener('load', loadAllTables);
+// Remove localStorage related code since we're using MongoDB now
 
 function loadSavedData() {
     const savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
@@ -507,45 +381,22 @@ function cancelEdit(button) {
 // Update the fetch URL to use the correct path
 async function loadData() {
     try {
-        // Try loading from API first
-        const response = await fetch(`${API_URL}/data.json`);
+        const response = await fetch(`${API_URL}/data`);
         if (!response.ok) {
-            throw new Error('API data not available');
+            throw new Error(`API Error: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Loaded data:', data);
         return data;
-    } catch (apiError) {
-        console.log('API error, trying local data:', apiError);
-        try {
-            // Try loading local data.json
-            const localResponse = await fetch('/data.json');
-            if (!localResponse.ok) {
-                throw new Error('Local data not available');
-            }
-            const localData = await localResponse.json();
-            return localData;
-        } catch (localError) {
-            console.log('Local data error, using backup:', localError);
-            try {
-                // Finally, try backup data
-                const backupResponse = await fetch('/backup.json');
-                if (!backupResponse.ok) {
-                    throw new Error('Backup data not available');
-                }
-                const backupData = await backupResponse.json();
-                console.log('Using backup data');
-                return backupData;
-            } catch (backupError) {
-                console.error('All data sources failed:', backupError);
-                // Return empty data structure as last resort
-                return {
-                    products: [],
-                    logs: [],
-                    dataAnalysis: [],
-                    accounts: []
-                };
-            }
-        }
+    } catch (error) {
+        console.error('Error loading data:', error);
+        // Return empty data structure if API fails
+        return {
+            products: [],
+            logs: [],
+            dataAnalysis: [],
+            accounts: []
+        };
     }
 }
 
