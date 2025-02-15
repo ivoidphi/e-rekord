@@ -1,4 +1,4 @@
-// Update API configuration with fallback
+// Update API configuration with proper error handling
 const API_URL = (() => {
     const hostname = window.location.hostname;
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
@@ -80,7 +80,7 @@ function addNewRow() {
     productTableBody.innerHTML += newRow;
 }
 
-// Update saveRow function
+// Update saveRow function with proper headers
 async function saveRow(button) {
     const row = button.closest('tr');
     const rowData = {
@@ -101,12 +101,11 @@ async function saveRow(button) {
                 'Accept': 'application/json'
             },
             mode: 'cors',
+            credentials: 'include',
             body: JSON.stringify(rowData)
         });
 
         if (!response.ok) throw new Error('Failed to save product');
-        
-        // Refresh all tables after successful save
         await loadAllTables();
         
     } catch (error) {
@@ -128,12 +127,12 @@ async function deleteRow(button) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            mode: 'cors'
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to delete product');
         
-        // Remove row and refresh tables
         row.remove();
         await loadAllTables();
         
@@ -323,12 +322,12 @@ async function deleteRow(button) {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            mode: 'cors'
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) throw new Error('Failed to delete product');
         
-        // Remove row and refresh tables
         row.remove();
         await loadAllTables();
         
@@ -380,7 +379,8 @@ async function loadData() {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             },
-            mode: 'cors'
+            mode: 'cors',
+            credentials: 'include'
         });
 
         if (!response.ok) {
