@@ -1,11 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ...existing head content... -->
-    <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
 </head>
 <body>
-    <!-- ...existing body content... -->
-    <script src="/script.js"></script>
+    <script src="script.js"></script>
+    <button id="toggleMenu" class="buttons" onclick="toggleMenu()">☰</button>
+    
+    <div id="site">
+        
+        <div id="leftsection" style="display: block;">
+                <h1 id="logo">E</h1>
+            <hr>
+            <h2>Welcome to E-Rekord,<br>
+                <span id="namecolor">{user}!</span>.
+                <br>
+                <hr>
+            </h2>
+            <ul id="tabs">
+                <li><button onclick="showproducts()" class="tabsButton active" id="productsButton">Products</button></li>
+                <li><button onclick="showlogs()" class="tabsButton" id="logsButton">Product Logs</button></li>
+                <li><button onclick="showaccounts()" class="tabsButton" id="accountsButton" href="#accounts">Accounts</button></li>
+                <li><button onclick="showdata()" class="tabsButton" id="dataButton">Data Analysis</button>
+ 
+                </li>
+            </ul>
+        </div>
+        <div id="midsection">
+            <!-- Products Table -->
+            <div id="productsTable">
+                <div class="table_component" role="region" tabindex="0">
+                    <h1 class="tab">PRODUCTS</h1>
+                    <hr/>
+                    <br>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>ID</th>
+                                <th>Quantity</th>
+                                <th>Cost (in PHP)</th>
+                                <th>Total Inventory</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    <button onclick="addNewRow()" class="buttons">Add New Product</button>
+                </div>
+            </div>
+            
+            <!-- Logs Table -->
+            <div id="logsTable" style="display: none;">
+                <h1 class="tab">LOGGED ACTIONS</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+            
+            <!-- Accounts Table -->
+            <div class="tab" id="accountsTable" style="display: none;">
+                <h1>ACCOUNTS</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+
+            <!-- Data Analysis Table -->
+            <div class="tab" id="dataTable" style="display: none;">
+                <h1>DATA ANALYSIS</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Total Sales</th>
+                                <th>Revenue</th>
+                                <th>Growth Rate</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+
+        </div>
+        <!-- <div id="rightsection"></div> -->
+    </div>
 </body>
 </html>
