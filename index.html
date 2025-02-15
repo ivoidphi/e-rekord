@@ -8,7 +8,10 @@
 </head>
 <body>
     <script src="script.js"></script>
+    <button id="toggleMenu" class="buttons" onclick="toggleMenu()">☰</button>
+    
     <div id="site">
+        
         <div id="leftsection" style="display: block;">
                 <h1 id="logo">E</h1>
             <hr>
@@ -18,19 +21,19 @@
                 <hr>
             </h2>
             <ul id="tabs">
-                <li><button onclick="showproducts()" class="tabsButton" id="productsButton">Products</button></li>
+                <li><button onclick="showproducts()" class="tabsButton active" id="productsButton">Products</button></li>
                 <li><button onclick="showlogs()" class="tabsButton" id="logsButton">Product Logs</button></li>
                 <li><button onclick="showaccounts()" class="tabsButton" id="accountsButton" href="#accounts">Accounts</button></li>
-                <li><button onclick="showdata()" class="tabsButton" href="#data">Data Analysis</button>
+                <li><button onclick="showdata()" class="tabsButton" id="dataButton">Data Analysis</button>
  
                 </li>
             </ul>
         </div>
         <div id="midsection">
-            <button id="toggleMenu" class="buttons" onclick="toggleMenu()">Menu</button>
+            <!-- Products Table -->
             <div id="productsTable">
                 <div class="table_component" role="region" tabindex="0">
-                    <center><h1>PRODUCTS</h1></center>
+                    <h1 class="tab">PRODUCTS</h1>
                     <hr/>
                     <br>
                     <table>
@@ -45,89 +48,88 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Shabu</td>
-                                <td>24-0342-983</td>
-                                <td>238</td>
-                                <td>5</td>
-                                <td>1190</td>
+                                <td data-label="Product">Shabu</td>
+                                <td data-label="ID">24-0342-983</td>
+                                <td data-label="Quantity">238</td>
+                                <td data-label="Cost (in PHP)">5</td>
+                                <td data-label="Total Inventory">1190</td>
                             </tr>
                             <tr>
-                                <td>Marijuana</td>
-                                <td>24-0342-983</td>
-                                <td>100</td>
-                                <td>8</td>
-                                <td>800</td>
+                                <td data-label="Product">Marijuana</td>
+                                <td data-label="ID">24-0342-983</td>
+                                <td data-label="Quantity">52</td>
+                                <td data-label="Cost (in PHP)">232</td>
+                                <td data-label="Total Inventory">123123</td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <!-- ...other rows... -->
                         </tbody>
                     </table>
-                    </div>
+                </div>
             </div>
             
+            <!-- Logs Table -->
             <div id="logsTable" style="display: none;">
-                <h1>LOGS</h1>
+                <h1 class="tab">LOGGED ACTIONS</h1>
                 <hr/>
                 <br>
                 <div class="table_component" role="region" tabindex="0">
                     <table>
                         <thead>
                             <tr>
-                                <th>Product</th>
-                                <th>ID</th>
-                                <th>Quantity</th>
-                                <th>Cost (in PHP)</th>
-                                <th>Total Inventory</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Time</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Ken Bucog</td>
-                                <td>Account</td>
-                                <td>Logged In</td>
-                                <td>Febuary 7, 2025 </td>
-                                <td>8:06 AM</td>
+                                <td data-label="Name">Ken Bucog</td>
+                                <td data-label="Type">Account</td>
+                                <td data-label="Action">Logged In</td>
+                                <td data-label="Date">February 7, 2025</td>
+                                <td data-label="Time">8:06 AM</td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <!-- ...other rows... -->
                         </tbody>
                     </table>
-                    </div> 
+                </div> 
             </div>
             
-            <div id="accountsTable" style="display: none;">
-                <h1>Accounts</h1>
+            <!-- Accounts Table -->
+            <div class="tab" id="accountsTable" style="display: none;">
+                <h1>ACCOUNTS</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Name">Jacob Bucton</td>
+                                <td data-label="Role">Admin</td>
+                                <td data-label="Status">Fake</td>
+                                <td data-label="Date">February 15, 2025</td>
+                                <td data-label="Time">9:04 AM</td>
+                            </tr>
+                            <!-- ...other rows... -->
+                        </tbody>
+                    </table>
+                </div> 
+            </div>
+
+            <!-- Data Analysis Table -->
+            <div class="tab" id="dataTable" style="display: none;">
+                <h1>DATA ANALYSIS</h1>
                 <hr/>
                 <br>
                 <div class="table_component" role="region" tabindex="0">
@@ -135,48 +137,35 @@
                         <thead>
                             <tr>
                                 <th>Product</th>
-                                <th>ID</th>
-                                <th>Quantity</th>
-                                <th>Cost (in PHP)</th>
-                                <th>Total Inventory</th>
+                                <th>Total Sales</th>
+                                <th>Revenue</th>
+                                <th>Growth Rate</th>
+                                <th>Last Updated</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Jacob Bucton</td>
-                                <td>Admin</td>
-                                <td>Fake</td>
-                                <td>Febuary 15, 2025 </td>
-                                <td>9:04 AM</td>
+                                <td data-label="Product">Shabu</td>
+                                <td data-label="Total Sales">1,234</td>
+                                <td data-label="Revenue">₱6,170</td>
+                                <td data-label="Growth Rate">+15%</td>
+                                <td data-label="Last Updated">Feb 15, 2025</td>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td data-label="Product">Marijuana</td>
+                                <td data-label="Total Sales">2,456</td>
+                                <td data-label="Revenue">₱569,792</td>
+                                <td data-label="Growth Rate">+25%</td>
+                                <td data-label="Last Updated">Feb 15, 2025</td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            <!-- ...other rows... -->
                         </tbody>
                     </table>
-                    </div> 
+                </div> 
             </div>
 
         </div>
-        <div id="rightsection"></div>
+        <!-- <div id="rightsection"></div> -->
     </div>
 </body>
 </html>

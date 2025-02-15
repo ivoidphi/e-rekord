@@ -1,49 +1,98 @@
-body{
+/* Reset and Base Styles */
+body {
     margin: 0;
 }
-*{
+
+* {
     font-family: Arial, Helvetica, sans-serif;
 }
-#site{
+
+/* Layout Containers */
+#site {
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: white;
-    margin: 0rem 0rem 0rem 0rem;
-    padding: 0rem 0rem 0rem 0rem;
+    margin: 0;
+    padding: 0;
 }
 
-#midsection, #rightsection{
+#midsection {
+    width: 80rem;
+    margin-left: 3rem;
+    flex: 2;
     background-color: white;
     padding: 10px;
     height: 100vh;
 }
 
-#leftsection, #rightsection{
+#rightsection {
+    width: 5rem;
+    flex: 0.5;
     background-color: grey;
+    padding: 10px;
+    height: 100vh;
 }
 
-#leftsection{
+/* Left Section Styles */
+#leftsection {
     text-align: center;
     align-items: center;
     border-radius: 20px;
+    position: inherit;
     padding: 2rem;
     margin-left: 1rem;
     background-color: #212121;
     color: white;
     width: 17rem;
-    float: left;
 }
 
-.tabsButton:hover{
-    background-color: white;
-    color: #212121;
-
+#logo {
+    font-size: 5rem;
+    margin: 0;
 }
 
-.tabsButton{
+#namecolor {
+    color: lightskyblue;
+}
+
+/* Navigation Styles */
+#tabs {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    font-size: 25px;
+    color: white;
+}
+
+#tabs > li {
+    margin-top: 25px;
+}
+
+#tabs > li > a {
+    text-decoration: none;
+    color: white;
+}
+
+#tabs > li:hover {
+    cursor: pointer;
+}
+
+/* Button Styles */
+.buttons {
+    color: white;
+    background-color: #212121;
+    border: none;
+    font-size: 1.5rem;
+    min-width: 5rem;
+    box-sizing: border-box;
+    height: 4rem;
+    border-radius: 50px;
+}
+
+.tabsButton {
     background: none;
     color: white;
-    outline-color: none;
     border: none;
     font-size: 1.5rem;
     width: 12rem;
@@ -51,74 +100,31 @@ body{
     border-radius: 50px;
 }
 
-.buttons{
-    color: white;
-    background-color: #212121;
-    outline-color: none;
-    border: none;
-    font-size: 1.5rem;
-    width: 30vw;
-    height: 4rem;
-    border-radius: 50px;
+.tabsButton:hover {
+    background-color: white;
+    color: #212121;
 }
 
-#midsection{
-    width: 80rem;
-    margin-left: 3rem;
-    flex: 2;
-}
-
-#rightsection{
-    width: 5rem;
-    flex: 0.5;
-}
-
-#logo{
-    font-size: 5rem;
-    margin: 0px 0px 0px 0px;
-}
-
-#namecolor{
-    color: lightskyblue;
-}
-
-#jumpto > a{
-    font-size: 25px;
-    text-decoration: none;
-}
-
-#tabs{
-    list-style-type: none;
-    margin: 0px 0px 0px 0px;
-    padding-left: 0px;
-    padding-top: 0px;
-    font-size: 25px;
-    color: white;
-}
-
-#tabs > li{
-    margin-top: 25px;
-}
-
-#tabs > li > a{
-    text-decoration: none;
-    color: white;
-}
-
-#tabs > li:hover{
+button:hover {
     cursor: pointer;
-} 
+}
 
+.active {
+    background-color: white !important;
+    color: #212121 !important;
+}
+
+/* Table Styles */
 .table_component {
-    overflow: auto;
+    overflow-x: auto;
     width: 100%;
 }
 
 .table_component table {
     border: 1px solid #dededf;
-    height: 100%;
-    width: 100%;
-    table-layout: fixed;
+    min-width: 100%;
+    width: auto;
+    table-layout: auto;
     border-collapse: collapse;
     border-spacing: 1px;
     text-align: left;
@@ -143,10 +149,50 @@ body{
     padding: 1rem;
 }
 
+/* Toggle Menu */
+#toggleMenu {
+    position: absolute;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
 
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .table_component td,
+    .table_component th {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
 
-
-.active{
-    background-color: white !important;
-    color: #212121 !important;
+@media screen and (max-width: 480px) {
+    .table_component table {
+        width: 100%;
+    }
+    
+    .table_component thead {
+        display: none;
+    }
+    
+    .table_component tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dededf;
+    }
+    
+    .table_component td {
+        display: block;
+        text-align: right;
+        padding: 0.5rem;
+        position: relative;
+        border-bottom: 1px solid #dededf;
+    }
+    
+    .table_component td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
 }
