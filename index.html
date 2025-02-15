@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <script src="script.js"></script>
+    <div id="site">
+        <div id="leftsection" style="display: block;">
+                <h1 id="logo">E</h1>
+            <hr>
+            <h2>Welcome to E-Rekord,<br>
+                <span id="namecolor">{user}!</span>.
+                <br>
+                <hr>
+            </h2>
+            <ul id="tabs">
+                <li><button onclick="showproducts()" class="tabsButton" id="productsButton">Products</button></li>
+                <li><button onclick="showlogs()" class="tabsButton" id="logsButton">Product Logs</button></li>
+                <li><button onclick="showaccounts()" class="tabsButton" id="accountsButton" href="#accounts">Accounts</button></li>
+                <li><button onclick="showdata()" class="tabsButton" href="#data">Data Analysis</button>
+ 
+                </li>
+            </ul>
+        </div>
+        <div id="midsection">
+            <button id="toggleMenu" class="buttons" onclick="toggleMenu()">Menu</button>
+            <div id="productsTable">
+                <div class="table_component" role="region" tabindex="0">
+                    <center><h1>PRODUCTS</h1></center>
+                    <hr/>
+                    <br>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>ID</th>
+                                <th>Quantity</th>
+                                <th>Cost (in PHP)</th>
+                                <th>Total Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Shabu</td>
+                                <td>24-0342-983</td>
+                                <td>238</td>
+                                <td>5</td>
+                                <td>1190</td>
+                            </tr>
+                            <tr>
+                                <td>Marijuana</td>
+                                <td>24-0342-983</td>
+                                <td>100</td>
+                                <td>8</td>
+                                <td>800</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+            </div>
+            
+            <div id="logsTable" style="display: none;">
+                <h1>LOGS</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>ID</th>
+                                <th>Quantity</th>
+                                <th>Cost (in PHP)</th>
+                                <th>Total Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ken Bucog</td>
+                                <td>Account</td>
+                                <td>Logged In</td>
+                                <td>Febuary 7, 2025 </td>
+                                <td>8:06 AM</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div> 
+            </div>
+            
+            <div id="accountsTable" style="display: none;">
+                <h1>Accounts</h1>
+                <hr/>
+                <br>
+                <div class="table_component" role="region" tabindex="0">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>ID</th>
+                                <th>Quantity</th>
+                                <th>Cost (in PHP)</th>
+                                <th>Total Inventory</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jacob Bucton</td>
+                                <td>Admin</td>
+                                <td>Fake</td>
+                                <td>Febuary 15, 2025 </td>
+                                <td>9:04 AM</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div> 
+            </div>
+
+        </div>
+        <div id="rightsection"></div>
+    </div>
+</body>
+</html>

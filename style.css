@@ -1,0 +1,152 @@
+body{
+    margin: 0;
+}
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+#site{
+    display: flex;
+    align-items: center;
+    background-color: white;
+    margin: 0rem 0rem 0rem 0rem;
+    padding: 0rem 0rem 0rem 0rem;
+}
+
+#midsection, #rightsection{
+    background-color: white;
+    padding: 10px;
+    height: 100vh;
+}
+
+#leftsection, #rightsection{
+    background-color: grey;
+}
+
+#leftsection{
+    text-align: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-left: 1rem;
+    background-color: #212121;
+    color: white;
+    width: 17rem;
+    float: left;
+}
+
+.tabsButton:hover{
+    background-color: white;
+    color: #212121;
+
+}
+
+.tabsButton{
+    background: none;
+    color: white;
+    outline-color: none;
+    border: none;
+    font-size: 1.5rem;
+    width: 12rem;
+    height: 8vh;
+    border-radius: 50px;
+}
+
+.buttons{
+    color: white;
+    background-color: #212121;
+    outline-color: none;
+    border: none;
+    font-size: 1.5rem;
+    width: 30vw;
+    height: 4rem;
+    border-radius: 50px;
+}
+
+#midsection{
+    width: 80rem;
+    margin-left: 3rem;
+    flex: 2;
+}
+
+#rightsection{
+    width: 5rem;
+    flex: 0.5;
+}
+
+#logo{
+    font-size: 5rem;
+    margin: 0px 0px 0px 0px;
+}
+
+#namecolor{
+    color: lightskyblue;
+}
+
+#jumpto > a{
+    font-size: 25px;
+    text-decoration: none;
+}
+
+#tabs{
+    list-style-type: none;
+    margin: 0px 0px 0px 0px;
+    padding-left: 0px;
+    padding-top: 0px;
+    font-size: 25px;
+    color: white;
+}
+
+#tabs > li{
+    margin-top: 25px;
+}
+
+#tabs > li > a{
+    text-decoration: none;
+    color: white;
+}
+
+#tabs > li:hover{
+    cursor: pointer;
+} 
+
+.table_component {
+    overflow: auto;
+    width: 100%;
+}
+
+.table_component table {
+    border: 1px solid #dededf;
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    text-align: left;
+}
+
+.table_component caption {
+    caption-side: top;
+    text-align: left;
+}
+
+.table_component th {
+    border: 1px solid #dededf;
+    background-color: #eceff1;
+    color: #000000;
+    padding: 5px;
+}
+
+.table_component td {
+    border: 1px solid #dededf;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 1rem;
+}
+
+
+
+
+.active{
+    background-color: white !important;
+    color: #212121 !important;
+}
