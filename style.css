@@ -149,11 +149,38 @@ button:hover {
     padding: 1rem;
 }
 
+.table_component button {
+    padding: 0.5rem;
+    margin: 0.2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.table_component button:first-child {
+    background-color: lightskyblue;
+    color: white;
+}
+
+.table_component button:last-child {
+    background-color: #212121;
+    color: white;
+}
+
+.table_component button:hover {
+    opacity: 0.8;
+}
+
 /* Toggle Menu */
 #toggleMenu {
     position: absolute;
     margin-left: 1rem;
     margin-top: 1rem;
+}
+
+[contenteditable="true"]:focus {
+    outline: 2px solid #212121;
+    padding: 0.2rem;
 }
 
 /* Responsive Styles */

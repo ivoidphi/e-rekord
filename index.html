@@ -44,26 +44,14 @@
                                 <th>Quantity</th>
                                 <th>Cost (in PHP)</th>
                                 <th>Total Inventory</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="Product">Shabu</td>
-                                <td data-label="ID">24-0342-983</td>
-                                <td data-label="Quantity">238</td>
-                                <td data-label="Cost (in PHP)">5</td>
-                                <td data-label="Total Inventory">1190</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Product">Marijuana</td>
-                                <td data-label="ID">24-0342-983</td>
-                                <td data-label="Quantity">52</td>
-                                <td data-label="Cost (in PHP)">232</td>
-                                <td data-label="Total Inventory">123123</td>
-                            </tr>
-                            <!-- ...other rows... -->
+                        <tbody id="productTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
                         </tbody>
                     </table>
+                    <button onclick="addNewRow()" class="buttons">Add New Product</button>
                 </div>
             </div>
             
@@ -83,15 +71,8 @@
                                 <th>Time</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="Name">Ken Bucog</td>
-                                <td data-label="Type">Account</td>
-                                <td data-label="Action">Logged In</td>
-                                <td data-label="Date">February 7, 2025</td>
-                                <td data-label="Time">8:06 AM</td>
-                            </tr>
-                            <!-- ...other rows... -->
+                        <tbody id="logsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div> 
@@ -113,15 +94,8 @@
                                 <th>Time</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="Name">Jacob Bucton</td>
-                                <td data-label="Role">Admin</td>
-                                <td data-label="Status">Fake</td>
-                                <td data-label="Date">February 15, 2025</td>
-                                <td data-label="Time">9:04 AM</td>
-                            </tr>
-                            <!-- ...other rows... -->
+                        <tbody id="accountsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div> 
@@ -143,22 +117,8 @@
                                 <th>Last Updated</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td data-label="Product">Shabu</td>
-                                <td data-label="Total Sales">1,234</td>
-                                <td data-label="Revenue">₱6,170</td>
-                                <td data-label="Growth Rate">+15%</td>
-                                <td data-label="Last Updated">Feb 15, 2025</td>
-                            </tr>
-                            <tr>
-                                <td data-label="Product">Marijuana</td>
-                                <td data-label="Total Sales">2,456</td>
-                                <td data-label="Revenue">₱569,792</td>
-                                <td data-label="Growth Rate">+25%</td>
-                                <td data-label="Last Updated">Feb 15, 2025</td>
-                            </tr>
-                            <!-- ...other rows... -->
+                        <tbody id="dataTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div> 

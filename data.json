@@ -1,0 +1,52 @@
+{
+  "products": [
+    {
+      "product": "Shabu",
+      "id": "24-0342-983",
+      "quantity": 238,
+      "cost": 5,
+      "totalInventory": 1190
+    },
+    {
+      "product": "Marijuana",
+      "id": "24-0342-983",
+      "quantity": 52,
+      "cost": 232,
+      "totalInventory": 123123
+    }
+  ],
+  "logs": [
+    {
+      "name": "Ken Bucog",
+      "type": "Account",
+      "action": "Logged In",
+      "date": "February 7, 2025",
+      "time": "8:06 AM"
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Jacob Bucton",
+      "role": "Admin",
+      "status": "Fake",
+      "date": "February 15, 2025",
+      "time": "9:04 AM"
+    }
+  ],
+  "dataAnalysis": [
+    {
+      "product": "Shabu",
+      "totalSales": 1234,
+      "revenue": 6170,
+      "growthRate": "+15%",
+      "lastUpdated": "Feb 15, 2025"
+    },
+    {
+      "product": "Marijuana",
+      "totalSales": 2456,
+      "revenue": 569792,
+      "growthRate": "+25%",
+      "lastUpdated": "Feb 15, 2025"
+    }
+  ]
+}
