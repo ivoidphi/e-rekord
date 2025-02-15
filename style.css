@@ -1,6 +1,7 @@
 /* Reset and Base Styles */
 body {
     margin: 0;
+    
 }
 
 * {
@@ -149,22 +150,36 @@ button:hover {
     padding: 1rem;
 }
 
+/* Update Table Button Styles */
 .table_component button {
-    padding: 0.5rem;
-    margin: 0.2rem;
+    padding: 0.3rem 0.8rem;
+    margin: 0.1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 0.9rem;
+    min-width: auto;
+    height: auto;
 }
 
+/* Style for Edit button */
 .table_component button:first-child {
     background-color: lightskyblue;
     color: white;
 }
 
+/* Style for Delete button */
 .table_component button:last-child {
     background-color: #212121;
     color: white;
+}
+
+/* Add New Product button specific style */
+#productsTable .buttons {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    height: auto;
+    min-width: auto;
 }
 
 .table_component button:hover {

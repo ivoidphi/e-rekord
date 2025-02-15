@@ -19,6 +19,11 @@ const analysisData = [
     { product: 'Product 2', sales: 750, revenue: 56250, growth: '20%', lastUpdated: '2023-12-01' }
 ];
 
+// Replace near the top of the file
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000/api'
+    : 'https://e-rekord.onrender.com/api';  // Replace with your actual Render URL after deployment
+
 // Table visibility functions
 function showproducts() {
     document.getElementById('productsTable').style.display = 'block';
@@ -140,50 +145,126 @@ function addNewRow() {
 }
 
 // Replace the saveRow function
-function saveRow(button) {
+async function saveRow(button) {
     const row = button.closest('tr');
+    const originalId = row.dataset.originalId || row.cells[1].textContent; // Store original ID for updating
+    
     const rowData = {
-        name: row.cells[0].textContent || row.cells[0].querySelector('input')?.value,
-        id: row.cells[1].textContent || row.cells[1].querySelector('input')?.value,
-        quantity: parseInt(row.cells[2].textContent || row.cells[2].querySelector('input')?.value) || 0,
-        cost: parseFloat(row.cells[3].textContent || row.cells[3].querySelector('input')?.value) || 0,
-        total: 0 // Will be calculated
+        product: row.cells[0].querySelector('input')?.value || row.cells[0].textContent,
+        id: row.cells[1].querySelector('input')?.value || row.cells[1].textContent,
+        quantity: parseInt(row.cells[2].querySelector('input')?.value || row.cells[2].textContent) || 0,
+        cost: parseFloat(row.cells[3].querySelector('input')?.value || row.cells[3].textContent) || 0,
+        totalInventory: 0
     };
 
-    // Calculate total
-    rowData.total = rowData.quantity * rowData.cost;
+    rowData.totalInventory = rowData.quantity * rowData.cost;
 
-    // Get existing data from localStorage
-    let savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
-    
-    // Update or add new product
-    const existingIndex = savedProducts.findIndex(p => p.id === rowData.id);
-    if (existingIndex >= 0) {
-        savedProducts[existingIndex] = rowData;
-    } else {
-        savedProducts.push(rowData);
+    try {
+        const response = await fetch(`${API_URL}/data`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        
+        // Remove existing product with the same ID
+        data.products = data.products.filter(p => p.id !== originalId);
+        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== rowData.product);
+        
+        // Add the updated product
+        data.products.push(rowData);
+
+        // Add log entry
+        data.logs.push({
+            name: 'User',
+            type: 'System',
+            action: `Product ${rowData.id} ${originalId ? 'updated' : 'added'}`,
+            date: new Date().toISOString().split('T')[0],
+            time: new Date().toLocaleTimeString()
+        });
+
+        // Add new analysis entry
+        data.dataAnalysis.push({
+            product: rowData.product,
+            totalSales: rowData.quantity,
+            revenue: rowData.totalInventory,
+            growthRate: "0%",
+            lastUpdated: new Date().toISOString().split('T')[0]
+        });
+
+        // Save to server
+        const saveResponse = await fetch(`${API_URL}/data`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!saveResponse.ok) throw new Error('Failed to save data');
+
+        // Update row display
+        row.innerHTML = `
+            <td>${rowData.product}</td>
+            <td>${rowData.id}</td>
+            <td>${rowData.quantity}</td>
+            <td>${rowData.cost}</td>
+            <td>${rowData.totalInventory}</td>
+            <td>
+                <button class="buttons" onclick="editRow(this)">Edit</button>
+                <button class="buttons" onclick="deleteRow(this)">Delete</button>
+            </td>
+        `;
+
+        // Refresh all tables
+        await loadAllTables();
+        
+    } catch (error) {
+        console.error('Error saving data:', error);
+        alert('Error saving data');
     }
+}
 
-    // Save to localStorage
-    localStorage.setItem('products', JSON.stringify(savedProducts));
+async function deleteRow(button) {
+    if(!confirm('Are you sure you want to delete this row?')) return;
     
-    // Add to logs
-    addToLogs(`Product ${rowData.id} ${existingIndex >= 0 ? 'updated' : 'added'}`);
+    const row = button.closest('tr');
+    const productId = row.cells[1].textContent;
     
-    // Update the row with normal cells
-    row.innerHTML = `
-        <td>${rowData.name}</td>
-        <td>${rowData.id}</td>
-        <td>${rowData.quantity}</td>
-        <td>${rowData.cost}</td>
-        <td>${rowData.total}</td>
-        <td>
-            <button class="buttons" onclick="editRow(this)">Edit</button>
-            <button class="buttons" onclick="deleteRow(this)">Delete</button>
-        </td>
-    `;
-    
-    updateDataAnalysis();
+    try {
+        const response = await fetch(`${API_URL}/data`);
+        const data = await response.json();
+        
+        // Remove from products
+        data.products = data.products.filter(p => p.id !== productId);
+        
+        // Add to logs
+        data.logs.push({
+            name: 'User',
+            type: 'System',
+            action: `Product ${productId} deleted`,
+            date: new Date().toISOString().split('T')[0],
+            time: new Date().toLocaleTimeString()
+        });
+
+        // Remove from analysis
+        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== row.cells[0].textContent);
+
+        // Save updated data
+        const saveResponse = await fetch(`${API_URL}/data`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!saveResponse.ok) throw new Error('Failed to save data');
+        
+        // Remove row from table
+        row.remove();
+        
+        // Reload all tables to ensure consistency
+        await loadAllTables();
+        
+        alert('Deleted successfully!');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error deleting product');
+    }
 }
 
 // Add these new helper functions
@@ -241,59 +322,24 @@ function updateDataAnalysis() {
     });
 }
 
-// Add this to initialize all data on first load
-window.addEventListener('load', function() {
-    if (!localStorage.getItem('initialized')) {
-        // Initialize with sample data from data.json
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                localStorage.setItem('products', JSON.stringify(data.products));
-                localStorage.setItem('logs', JSON.stringify(data.logs));
-                localStorage.setItem('accounts', JSON.stringify(data.accounts));
-                localStorage.setItem('dataAnalysis', JSON.stringify(data.dataAnalysis));
-                localStorage.setItem('initialized', 'true');
-                loadAllData();
-            })
-            .catch(error => {
-                console.error('Error loading initial data:', error);
-                // Fallback to sample data arrays if data.json fails
-                localStorage.setItem('products', JSON.stringify(products));
-                localStorage.setItem('logs', JSON.stringify(logs));
-                localStorage.setItem('accounts', JSON.stringify(accounts));
-                localStorage.setItem('dataAnalysis', JSON.stringify(analysisData));
-                localStorage.setItem('initialized', 'true');
-                loadAllData();
-            });
-    } else {
-        loadAllData();
-    }
-});
-
-function loadAllData() {
-    loadSavedData(); // For products table
-    updateLogsTable();
-    updateDataAnalysis();
-}
-
-function deleteRow(button) {
-    if(confirm('Are you sure you want to delete this row?')) {
-        const row = button.closest('tr');
-        const productId = row.cells[1].textContent;
+// Add this new helper function
+async function loadAllTables() {
+    try {
+        const response = await fetch(`${API_URL}/data`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
         
-        // Get existing data from localStorage
-        let savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
-        
-        // Remove the product
-        savedProducts = savedProducts.filter(p => p.id !== productId);
-        
-        // Save back to localStorage
-        localStorage.setItem('products', JSON.stringify(savedProducts));
-        
-        row.remove();
-        alert('Deleted successfully!');
+        populateTable('productTableBody', data.products, ['product', 'id', 'quantity', 'cost', 'totalInventory']);
+        populateTable('logsTableBody', data.logs, ['name', 'type', 'action', 'date', 'time']);
+        populateTable('accountsTableBody', data.accounts, ['name', 'role', 'status', 'date', 'time']);
+        populateTable('dataTableBody', data.dataAnalysis, ['product', 'totalSales', 'revenue', 'growthRate', 'lastUpdated']);
+    } catch (error) {
+        console.error('Error refreshing tables:', error);
     }
 }
+
+// Replace the existing load event listeners with this single one
+window.addEventListener('load', loadAllTables);
 
 function loadSavedData() {
     const savedProducts = JSON.parse(localStorage.getItem('products') || '[]');
@@ -366,12 +412,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function populateTable(tableBodyId, data, columns) {
     const tableBody = document.getElementById(tableBodyId);
-    if (!tableBody) {
-        console.error(`Table body with id ${tableBodyId} not found`);
-        return;
-    }
+    if (!tableBody) return;
     
-    tableBody.innerHTML = ''; // Clear existing rows
+    tableBody.innerHTML = '';
     
     try {
         data.forEach(row => {
@@ -381,15 +424,100 @@ function populateTable(tableBodyId, data, columns) {
                 td.textContent = row[col] || '';
                 tr.appendChild(td);
             });
+            
             if (tableBodyId === 'productTableBody') {
                 const actionTd = document.createElement('td');
-                actionTd.innerHTML = '<button class="buttons">Edit</button> <button class="buttons">Delete</button>';
+                actionTd.innerHTML = `
+                    <button class="buttons" onclick="editRow(this)">Edit</button>
+                    <button class="buttons" onclick="deleteRow(this)">Delete</button>
+                `;
                 tr.appendChild(actionTd);
             }
+            
             tableBody.appendChild(tr);
         });
     } catch (error) {
         console.error('Error populating table:', error);
         tableBody.innerHTML = '<tr><td colspan="6">Error loading data</td></tr>';
+    }
+}
+
+// Make sure deleteRow is properly defined
+async function deleteRow(button) {
+    if (!confirm('Are you sure you want to delete this row?')) return;
+    
+    const row = button.closest('tr');
+    const productId = row.cells[1].textContent;
+    
+    try {
+        const response = await fetch(`${API_URL}/data`);
+        if (!response.ok) throw new Error('Failed to fetch data');
+        const data = await response.json();
+        
+        // Remove product
+        data.products = data.products.filter(p => p.id !== productId);
+        
+        // Add log entry
+        data.logs.push({
+            name: 'User',
+            type: 'System',
+            action: `Product ${productId} deleted`,
+            date: new Date().toISOString().split('T')[0],
+            time: new Date().toLocaleTimeString()
+        });
+
+        // Update data analysis
+        const productName = row.cells[0].textContent;
+        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== productName);
+
+        // Save changes
+        const saveResponse = await fetch(`${API_URL}/data`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!saveResponse.ok) throw new Error('Failed to save data');
+
+        // Remove row and refresh tables
+        row.remove();
+        await loadAllTables();
+        
+        console.log('Product deleted successfully');
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Error deleting product: ' + error.message);
+    }
+}
+
+function editRow(button) {
+    const row = button.closest('tr');
+    const cells = row.cells;
+    
+    // Store original ID for updating
+    row.dataset.originalId = cells[1].textContent;
+    
+    // Store original content for cancel
+    row.dataset.originalContent = row.innerHTML;
+    
+    // Replace cells with input fields
+    cells[0].innerHTML = `<input type="text" value="${cells[0].textContent}" placeholder="Product Name">`;
+    cells[1].innerHTML = `<input type="text" value="${cells[1].textContent}" placeholder="ID">`;
+    cells[2].innerHTML = `<input type="number" value="${cells[2].textContent}" placeholder="Quantity">`;
+    cells[3].innerHTML = `<input type="number" value="${cells[3].textContent}" placeholder="Cost">`;
+    cells[4].innerHTML = `<input type="number" value="${cells[4].textContent}" placeholder="Total" readonly>`;
+    
+    // Replace edit/delete buttons with save/cancel buttons
+    cells[5].innerHTML = `
+        <button class="buttons" onclick="saveRow(this)">Save</button>
+        <button class="buttons" onclick="cancelEdit(this)">Cancel</button>
+    `;
+}
+
+function cancelEdit(button) {
+    const row = button.closest('tr');
+    // Restore original content
+    if (row.dataset.originalContent) {
+        row.innerHTML = row.dataset.originalContent;
     }
 }

@@ -1,52 +1,87 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const app = express();
+const port = process.env.PORT || 3000;
 
-app.use(express.json());
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+// Define schemas
+const productSchema = new mongoose.Schema({
+    product: String,
+    id: String,
+    quantity: Number,
+    cost: Number,
+    totalInventory: Number
+});
+
+const logSchema = new mongoose.Schema({
+    name: String,
+    type: String,
+    action: String,
+    date: String,
+    time: String
+});
+
+const analysisSchema = new mongoose.Schema({
+    product: String,
+    totalSales: Number,
+    revenue: Number,
+    growthRate: String,
+    lastUpdated: String
+});
+
+// Create models
+const Product = mongoose.model('Product', productSchema);
+const Log = mongoose.model('Log', logSchema);
+const Analysis = mongoose.model('Analysis', analysisSchema);
+
 app.use(cors());
-app.use(express.static(path.join(__dirname)));
+app.use(express.json());
+app.use(express.static('public'));  // Serve files from public directory
 
-const dataFile = path.join(__dirname, 'data.json');
-
-// Initialize data.json if it doesn't exist
-if (!fs.existsSync(dataFile)) {
-    fs.writeFileSync(dataFile, JSON.stringify([]));
-}
-
-// Get all products
-app.get('/api/products', (req, res) => {
-    const data = JSON.parse(fs.readFileSync(dataFile));
-    res.json(data);
-});
-
-// Save or update product
-app.post('/api/products', (req, res) => {
-    const newData = req.body;
-    let data = JSON.parse(fs.readFileSync(dataFile));
-    
-    const existingIndex = data.findIndex(item => item.id === newData.id);
-    if (existingIndex !== -1) {
-        data[existingIndex] = newData;
-    } else {
-        data.push(newData);
+// API Endpoints
+app.get('/api/data', async (req, res) => {
+    try {
+        const products = await Product.find();
+        const logs = await Log.find();
+        const analysis = await Analysis.find();
+        
+        res.json({
+            products,
+            logs,
+            dataAnalysis: analysis,
+            accounts: [] // Placeholder for future implementation
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-    
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
-    res.json({ message: 'Saved successfully' });
 });
 
-// Delete product
-app.delete('/api/products/:id', (req, res) => {
-    const id = req.params.id;
-    let data = JSON.parse(fs.readFileSync(dataFile));
-    data = data.filter(item => item.id !== id);
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
-    res.json({ message: 'Deleted successfully' });
+app.post('/api/data', async (req, res) => {
+    try {
+        // Clear existing data
+        await Product.deleteMany({});
+        await Log.deleteMany({});
+        await Analysis.deleteMany({});
+
+        // Insert new data
+        await Product.insertMany(req.body.products);
+        await Log.insertMany(req.body.logs);
+        await Analysis.insertMany(req.body.dataAnalysis);
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });

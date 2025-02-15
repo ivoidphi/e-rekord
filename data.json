@@ -1,18 +1,191 @@
 {
-    "products": [
-        {"product": "Product 1", "id": "001", "quantity": 100, "cost": 50, "totalInventory": 5000},
-        {"product": "Product 2", "id": "002", "quantity": 150, "cost": 75, "totalInventory": 11250}
-    ],
-    "logs": [
-        {"name": "John Doe", "type": "Admin", "action": "Added Product", "date": "2023-12-01", "time": "10:30 AM"},
-        {"name": "Jane Smith", "type": "User", "action": "Updated Stock", "date": "2023-12-01", "time": "11:45 AM"}
-    ],
-    "accounts": [
-        {"name": "John Doe", "role": "Admin", "status": "Active", "date": "2023-12-01", "time": "09:00 AM"},
-        {"name": "Jane Smith", "role": "User", "status": "Active", "date": "2023-12-01", "time": "09:15 AM"}
-    ],
-    "dataAnalysis": [
-        {"product": "Product 1", "totalSales": 500, "revenue": 25000, "growthRate": "15%", "lastUpdated": "2023-12-01"},
-        {"product": "Product 2", "totalSales": 750, "revenue": 56250, "growthRate": "20%", "lastUpdated": "2023-12-01"}
-    ]
+  "products": [
+    {
+      "product": "Product 1",
+      "id": "001",
+      "quantity": 100,
+      "cost": 50,
+      "totalInventory": 5000
+    },
+    {
+      "product": "Product 2",
+      "id": "002",
+      "quantity": 100,
+      "cost": 50,
+      "totalInventory": 5000
+    },
+    {
+      "product": "LOVE",
+      "id": "YOU12312321",
+      "quantity": 23,
+      "cost": 12,
+      "totalInventory": 276
+    }
+  ],
+  "logs": [
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product 32131231 added",
+      "date": "2025-02-15",
+      "time": "16:50:38"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product 32131231 deleted",
+      "date": "2025-02-15",
+      "time": "16:51:57"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product 002 deleted",
+      "date": "2025-02-15",
+      "time": "16:52:05"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product 002 added",
+      "date": "2025-02-15",
+      "time": "16:52:14"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product YOU added",
+      "date": "2025-02-15",
+      "time": "16:56:39"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product ME added",
+      "date": "2025-02-15",
+      "time": "16:58:51"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product ME updated",
+      "date": "2025-02-15",
+      "time": "16:58:56"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product YOU updated",
+      "date": "2025-02-15",
+      "time": "16:59:08"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product DAWDAW added",
+      "date": "2025-02-15",
+      "time": "16:59:20"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product DAWDAW deleted",
+      "date": "2025-02-15",
+      "time": "16:59:25"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MES added",
+      "date": "2025-02-15",
+      "time": "16:59:31"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product ME updated",
+      "date": "2025-02-15",
+      "time": "16:59:49"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MES deleted",
+      "date": "2025-02-15",
+      "time": "16:59:51"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MES added",
+      "date": "2025-02-15",
+      "time": "16:59:54"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product ME deleted",
+      "date": "2025-02-15",
+      "time": "16:59:56"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MESDAD added",
+      "date": "2025-02-15",
+      "time": "17:01:48"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MES deleted",
+      "date": "2025-02-15",
+      "time": "17:01:52"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MESDADaWDAWDAW updated",
+      "date": "2025-02-15",
+      "time": "17:03:35"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MESDADaWDAWDAW deleted",
+      "date": "2025-02-15",
+      "time": "17:04:03"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product MESDAD deleted",
+      "date": "2025-02-15",
+      "time": "17:04:05"
+    },
+    {
+      "name": "User",
+      "type": "System",
+      "action": "Product YOU12312321 updated",
+      "date": "2025-02-15",
+      "time": "17:05:31"
+    }
+  ],
+  "accounts": [],
+  "dataAnalysis": [
+    {
+      "product": "Product 2",
+      "totalSales": 100,
+      "revenue": 5000,
+      "growthRate": "0%",
+      "lastUpdated": "2025-02-15"
+    },
+    {
+      "product": "LOVE",
+      "totalSales": 23,
+      "revenue": 276,
+      "growthRate": "0%",
+      "lastUpdated": "2025-02-15"
+    }
+  ]
 }
