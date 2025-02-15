@@ -25,7 +25,11 @@ router.get('/data', async (req, res) => {
             accounts: [] // Add your accounts collection here
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Database error:', error);
+        res.status(500).json({ 
+            error: 'Database error',
+            message: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
@@ -48,6 +52,15 @@ router.delete('/products/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+// Add error handler middleware for the router
+router.use((err, req, res, next) => {
+    console.error('API Error:', err);
+    res.status(500).json({ 
+        error: 'API Error',
+        message: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
 });
 
 module.exports = router;

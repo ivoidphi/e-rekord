@@ -1,7 +1,11 @@
-// Update API configuration
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000/api'
-    : 'https://e-rekord.onrender.com/api';
+// Update API configuration with fallback
+const API_URL = (() => {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return 'http://localhost:3000/api';
+    }
+    return 'https://e-rekord.onrender.com/api';
+})();
 
 // Table visibility functions
 function showproducts() {
@@ -79,10 +83,8 @@ function addNewRow() {
 // Update saveRow function
 async function saveRow(button) {
     const row = button.closest('tr');
-    const originalId = row.dataset.originalId || row.cells[1].textContent; // Store original ID for updating
-    
     const rowData = {
-        product: row.cells[0].querySelector('input')?.value || row.cells[0].textContent,
+        name: row.cells[0].querySelector('input')?.value || row.cells[0].textContent,
         id: row.cells[1].querySelector('input')?.value || row.cells[1].textContent,
         quantity: parseInt(row.cells[2].querySelector('input')?.value || row.cells[2].textContent) || 0,
         cost: parseFloat(row.cells[3].querySelector('input')?.value || row.cells[3].textContent) || 0,
@@ -94,7 +96,11 @@ async function saveRow(button) {
     try {
         const response = await fetch(`${API_URL}/products`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors',
             body: JSON.stringify(rowData)
         });
 
@@ -117,7 +123,12 @@ async function deleteRow(button) {
     
     try {
         const response = await fetch(`${API_URL}/products/${productId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors'
         });
 
         if (!response.ok) throw new Error('Failed to delete product');
@@ -306,35 +317,17 @@ async function deleteRow(button) {
     const productId = row.cells[1].textContent;
     
     try {
-        const response = await fetch(`${API_URL}/data.json`);
-        if (!response.ok) throw new Error('Failed to fetch data');
-        const data = await response.json();
-        
-        // Remove product
-        data.products = data.products.filter(p => p.id !== productId);
-        
-        // Add log entry
-        data.logs.push({
-            name: 'User',
-            type: 'System',
-            action: `Product ${productId} deleted`,
-            date: new Date().toISOString().split('T')[0],
-            time: new Date().toLocaleTimeString()
+        const response = await fetch(`${API_URL}/products/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors'
         });
 
-        // Update data analysis
-        const productName = row.cells[0].textContent;
-        data.dataAnalysis = data.dataAnalysis.filter(d => d.product !== productName);
-
-        // Save changes
-        const saveResponse = await fetch(`${API_URL}/data.json`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-
-        if (!saveResponse.ok) throw new Error('Failed to save data');
-
+        if (!response.ok) throw new Error('Failed to delete product');
+        
         // Remove row and refresh tables
         row.remove();
         await loadAllTables();
@@ -381,16 +374,37 @@ function cancelEdit(button) {
 // Update the fetch URL to use the correct path
 async function loadData() {
     try {
-        const response = await fetch(`${API_URL}/data`);
+        const response = await fetch(`${API_URL}/data`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            mode: 'cors'
+        });
+
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+            throw new Error(`API Error: ${response.status} - ${response.statusText}`);
         }
+
         const data = await response.json();
         console.log('Loaded data:', data);
         return data;
     } catch (error) {
         console.error('Error loading data:', error);
-        // Return empty data structure if API fails
+        // Try loading backup data if API fails
+        try {
+            const backupResponse = await fetch('/backup.json');
+            if (backupResponse.ok) {
+                const backupData = await backupResponse.json();
+                console.log('Using backup data');
+                return backupData;
+            }
+        } catch (backupError) {
+            console.error('Backup data loading failed:', backupError);
+        }
+        
+        // Return empty structure as last resort
         return {
             products: [],
             logs: [],
